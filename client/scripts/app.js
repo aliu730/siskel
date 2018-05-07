@@ -13,8 +13,11 @@ var Movie = Backbone.Model.extend({
     //   return !status;
     // }
     //console.log(this.attributes);
-    this.attributes.like = !status;
-    this.collection.sort();
+    // this.attributes.like = !status;
+    // this.collection.sort();
+    //console.log(this.get('like'));
+    var opposite = !this.get('like');
+    this.set('like', opposite); 
   }
 
 });
