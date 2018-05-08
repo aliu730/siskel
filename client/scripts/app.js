@@ -5,19 +5,10 @@ var Movie = Backbone.Model.extend({
   },
 
   toggleLike: function() {
-    // your code here
     var status = this.attributes.like;
-    // if (status) {
-    //   return !status;
-    // } else {
-    //   return !status;
-    // }
-    //console.log(this.attributes);
-    // this.attributes.like = !status;
-    // this.collection.sort();
-    //console.log(this.get('like'));
     var opposite = !this.get('like');
     this.set('like', opposite); 
+    
   }
 
 });
@@ -27,13 +18,12 @@ var Movies = Backbone.Collection.extend({
   model: Movie,
 
   initialize: function() {
-    // your code here
+    this.on('change', this.sort, this);
   },
   
   comparator: 'title',
 
   sortByField: function(field) {
-    // console.log(this);
     this.comparator = field;
     this.sort();
   }
@@ -45,7 +35,7 @@ var AppView = Backbone.View.extend({
   events: {
     'click form input': 'handleClick'
   },
-
+  
   handleClick: function(e) {
     var field = $(e.target).val();
     this.collection.sortByField(field);
@@ -56,6 +46,7 @@ var AppView = Backbone.View.extend({
       el: this.$('#movies'),
       collection: this.collection
     }).render();
+   
   }
 
 });
@@ -71,26 +62,23 @@ var MovieView = Backbone.View.extend({
                         </div>'),
 
   initialize: function() {
-    this.render();
-  
-    //.on('click', this.handleClick) 
+    this.model.on('change', this.render, this);
   },
 
   events: {
     'click button': 'handleClick',
-    'click like': 'toggleLike'
+
   },
 
   handleClick: function() {
-    // your code 
-    console.log(this.model.attributes);
-    this.model.attributes.like.toggleLike();
-    this.render();
+    this.model.toggleLike();
   },
 
   render: function() {
     this.$el.html(this.template(this.model.attributes));
+    
     return this.$el;
+
   }
 
 });
@@ -98,7 +86,7 @@ var MovieView = Backbone.View.extend({
 var MoviesView = Backbone.View.extend({
 
   initialize: function() {
-    // your code here
+    this.render();
   },
 
   render: function() {
